@@ -51,9 +51,12 @@ st_as_sf(wilmington,
          crs = 4269) 
 
 wilmington_map <- 
-  ggplot(data = wilmington) +
-  geom_sf(data = shapes)
+  ggplot(data = shapes) +
+  geom_sf()
+
 wilmington_map
+
+
 wilmington <-
   wilmington %>% 
   select(first_unit_there, last_unit_to_leave_the_scene, latitude, longitude) %>% 
