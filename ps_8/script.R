@@ -2,8 +2,14 @@
 library(shiny)
 library(tidyverse)
 library(janitor)
-library(lubridate)
-library(readxl)
+library(sf)
+library(tidycensus)
+library(leaflet)
+library(mapview)
+library(tigris)
+
+census_api_key("a04411e6531c865e7b27d166476949e65577d6cd", install = TRUE)
+
 
 wilmington <- read_csv("http://justicetechlab.org/wp-content/uploads/2018/05/Wilmington_ShotspotterCAD_calls.csv", 
                        col_types = cols(
@@ -25,9 +31,29 @@ wilmington <- read_csv("http://justicetechlab.org/wp-content/uploads/2018/05/Wil
   notes = col_character(),
   timeclose = col_character(),
   Latitude = col_double(),
-  Longitude = col_double())) %>% 
-  clean_names() 
+  Longitude = col_double())) 
+  
+wilmington <- clean_names(wilmington) %>%
+  filter(first_unit_there != "NULL", last_unit_to_leave_the_scene != "NULL", latitude != "NA", longitude != "NA")
 
+shapes <- 
+  urban_areas(class = "sf") 
+
+shapes <-
+  shapes %>%
+  clean_names() %>%
+  filter(name10 == "Wilmington, NC")
+
+st_crs(shapes)
+
+st_as_sf(wilmington,
+         coords = c("longitude", "latitude"),
+         crs = 4269) 
+
+wilmington_map <- 
+  ggplot(data = wilmington) +
+  geom_sf(data = shapes)
+wilmington_map
 wilmington <-
   wilmington %>% 
   select(first_unit_there, last_unit_to_leave_the_scene, latitude, longitude) %>% 
