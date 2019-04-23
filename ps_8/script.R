@@ -47,17 +47,17 @@ shapes <-
 
 st_crs(shapes)
 
-penis <- 
+blank_sf <- 
   st_as_sf(wilmington,
          coords = c("longitude", "latitude"),
          crs = 4269) 
 
 wilmington_map <- 
   ggplot(data = shapes) +
-  geom_sf(data = shapes) + geom_sf(data = wilmington_scatter)
+  geom_sf(data = shapes)
+
 
 wilmington_map
-
 
 wilmington_points <-
   wilmington %>% 
@@ -75,6 +75,6 @@ wilmington_scatter <-
   summarize(total = n()) %>%
   arrange(desc(total)) %>%
   slice(1:5) %>%
-  select(primeunit)
+  select(primeunit, latitude, longitude)
 #Comparison of duration of time at scene for 
 
