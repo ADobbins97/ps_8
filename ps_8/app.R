@@ -33,30 +33,31 @@ ui <- fluidPage(
                                               selected = c("323", "291", "328", "347", "325",
                                                            options = list(`actions-box` = TRUE),
                                                            multiple = TRUE))
-    ),
-    mainPanel(plotOutput("Wilmigton"), 
-              br(), br(),
-              tableOutput("results"))
+      ),
+      mainPanel(plotOutput("Wilmigton"), 
+                br(), br(),
+                tableOutput("results"))
+    )
   )
-)
-
-server <-
-  fucntion(input, output) {
-    filtered <- reactive({
-      officer %>% 
-        filter(primeunit %in% c("323", "291", "328", "347", "325")
-                                )
-    })
-    
-    output$Wilmington <-renderPlot({
-      ggplot(filtered(), aes(primeunit))+
-        geom_sf()
-    })
-    
-    output$results <- renderTable({
-      filtered()
-    })
-  }
-
-shinyApp(ui = ui, server = server)
-
+  
+  server <-
+    fucntion(input, output) {
+      filtered <- reactive({
+        officer %>% 
+          filter(primeunit %in% c("323", "291", "328", "347", "325")
+          )
+      })
+      
+      output$Wilmington <-renderPlot({
+        ggplot(filtered(), aes(primeunit))+
+          geom_sf()
+      })
+      
+      output$results <- renderTable({
+        filtered()
+      })
+    }
+  
+  shinyApp(ui = ui, server = server)
+  
+  
