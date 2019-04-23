@@ -54,20 +54,21 @@ blank_sf <-
 
 wilmington_map <- 
   ggplot(data = shapes) +
-  geom_sf(data = shapes)
+  geom_sf(data =)
 
 
 wilmington_map
 
 wilmington_points <-
   wilmington %>% 
-  select(first_unit_there, last_unit_to_leave_the_scene, latitude, longitude) %>% 
-  filter(first_unit_there != "NULL", last_unit_to_leave_the_scene != "NULL", latitude != "NA", longitude != "NA") %>% 
-  #strsplit(format(first_unit_there, "%d %m %Y %H:%M"), ' ') 
-  mutate(first_unit_there = parse_date_time(first_unit_there, "%d %%m %Y %H:%M %S", truncated = 3)) %>%
-  #mutate(first_unit_there = dmy_hm(first_unit_there)) %>% 
-  #mutate(last_unit_to_leave_the_scene = mdy_hm(last_unit_to_leave_the_scene)) 
-  mutate(last_unit_to_leave_the_scene = parse_date_time(last_unit_to_leave_the_scene, "%d %%m %Y %H:%M %S", truncated = 3))
+  select(primeunit, latitude, longitude) %>%
+  filter(!is.na(latitude), !is.na(longitude))
+
+points_location <-
+  st_as_sf(wilmington_points,
+           coods = c("longitude", "latitude"),
+           crs = 4269)
+
 
 wilmington_scatter <-
   wilmington %>%
