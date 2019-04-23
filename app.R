@@ -101,7 +101,7 @@ server <- function(input, output, session) {
     ggplot(data = shapes) +
       geom_sf() + 
       geom_sf(data = points_location, mapping = aes(color = primeunit))
-})
+  })
 }
 
 ui <- fluidPage(
@@ -110,18 +110,18 @@ ui <- fluidPage(
   #titlePanel("Shotspotter in Wilmington, NC"),
   #br(),
   #sidebarLayout(
-    #sidebarPanel("inputs"),
-    #mainPanel("results"),
-    checkboxGroupInput("variable", "Unit to Show:", choiceNames = list(icon("323"), icon("291"), icon("328"), icon("347"), icon("325")),
-                                                   choiceValues = list("323", "291", "328", "347", "325")
-                       ),
-    textOutput("txt"),
-    mainPanel(
-      plotOutput("wilmington_map"),
-      br(),
-      tableOutput("results")
-    )
+  #sidebarPanel("inputs"),
+  #mainPanel("results"),
+  checkboxGroupInput("variable", "Unit to Show:", choiceNames = list(icon("323"), icon("291"), icon("328"), icon("347"), icon("325")),
+                     choiceValues = list("323", "291", "328", "347", "325")
+  ),
+  textOutput("txt"),
+  mainPanel(
+    plotOutput("wilmington_map"),
+    br(),
+    tableOutput("results")
   )
+)
 
 #Run the application 
 shinyApp(ui = ui, server = server)
