@@ -37,6 +37,18 @@ wilmington <- read_csv("http://justicetechlab.org/wp-content/uploads/2018/05/Wil
 wilmington <- clean_names(wilmington) %>%
   filter(first_unit_there != "NULL", last_unit_to_leave_the_scene != "NULL", latitude != "NA", longitude != "NA")
 
+wilmington_points <-
+  wilmington %>% 
+  select(primeunit, latitude, longitude) %>%
+  filter(!is.na(latitude), !is.na(longitude)) %>%
+  filter(primeunit %in% c("323", "291", "328", "347", "325")) %>%
+  group_by(primeunit, latitude, longitude) %>%
+  summarise(gunshots = n())
+
+points_location <-
+  st_as_sf(wilmington_points,
+           coords = c("longitude", "latitude"),
+           crs = 4269)
 shapes <- 
   urban_areas(class = "sf") 
 
@@ -54,7 +66,7 @@ blank_sf <-
 
 wilmington_map <- 
   ggplot(data = shapes) +
-  geom_sf(data =)
+  geom_sf() + geom_sf(data = points_location, mapping = aes(color = primeunit))
 
 
 wilmington_map
@@ -64,18 +76,5 @@ wilmington_points <-
   select(primeunit, latitude, longitude) %>%
   filter(!is.na(latitude), !is.na(longitude))
 
-points_location <-
-  st_as_sf(wilmington_points,
-           coods = c("longitude", "latitude"),
-           crs = 4269)
 
-
-wilmington_scatter <-
-  wilmington %>%
-  group_by(primeunit) %>%
-  summarize(total = n()) %>%
-  arrange(desc(total)) %>%
-  slice(1:5) %>%
-  select(primeunit, latitude, longitude)
-#Comparison of duration of time at scene for 
 
