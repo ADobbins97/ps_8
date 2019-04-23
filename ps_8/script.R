@@ -66,7 +66,7 @@ blank_sf <-
 
 wilmington_map <- 
   ggplot(data = shapes) +
-  geom_sf(data = shapes) + geom_sf(data = points_location, mapping = aes(color = primeunit))
+  geom_sf() + geom_sf(data = points_location, mapping = aes(color = primeunit))
 
 
 wilmington_map
