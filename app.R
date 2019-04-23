@@ -18,9 +18,6 @@ library(mapview)
 library(tigris)
 library(lubridate)
 
-census_api_key("a04411e6531c865e7b27d166476949e65577d6cd", install = TRUE, overwrite = TRUE)
-
-
 wilmington <- read_csv("http://justicetechlab.org/wp-content/uploads/2018/05/Wilmington_ShotspotterCAD_calls.csv", 
                        col_types = cols(
                          calltime = col_character(),
@@ -41,7 +38,8 @@ wilmington <- read_csv("http://justicetechlab.org/wp-content/uploads/2018/05/Wil
                          notes = col_character(),
                          timeclose = col_character(),
                          Latitude = col_double(),
-                         Longitude = col_double())) 
+                         Longitude = col_double()))
+  clean_names(wilmington)
 
 # wilmington <- clean_names(wilmington) %>%
 #   filter(first_unit_there != "NULL", last_unit_to_leave_the_scene != "NULL", latitude != "NA", longitude != "NA")
@@ -75,20 +73,20 @@ wilmington <- read_csv("http://justicetechlab.org/wp-content/uploads/2018/05/Wil
 # wilmington_map
 
 # Define UI for application that draws a map
-server <- function(input, output, session) {
+server <- function(input, output) {
   output$wilmington_map <- renderPlot({
     
     wilmington_points <-
       wilmington %>% 
-      select(primeunit, latitude, longitude) %>%
-      filter(!is.na(latitude), !is.na(longitude)) %>%
+      select(primeunit, Latitude, Longitude) %>%
+      filter(!is.na(Latitude), !is.na(Longitude)) %>%
       filter(primeunit %in% c("323", "291", "328", "347", "325")) %>%
-      group_by(primeunit, latitude, longitude) %>%
+      group_by(primeunit, Latitude, Longitude) %>%
       summarise(gunshots = n())
     
     points_location <-
       st_as_sf(wilmington_points,
-               coords = c("longitude", "latitude"),
+               coords = c("Longitude", "Latitude"),
                crs = 4269)
     shapes <- 
       urban_areas(class = "sf") 
@@ -107,10 +105,10 @@ server <- function(input, output, session) {
 ui <- fluidPage(
   
   # Application title
-  #titlePanel("Shotspotter in Wilmington, NC"),
-  #br(),
-  #sidebarLayout(
-  #sidebarPanel("inputs"),
+  titlePanel("Shotspotter in Wilmington, NC"),
+  br(),
+  sidebarLayout(
+  sidebarPanel("inputs"),
   #mainPanel("results"),
   checkboxGroupInput("variable", "Unit to Show:", choiceNames = list(icon("323"), icon("291"), icon("328"), icon("347"), icon("325")),
                      choiceValues = list("323", "291", "328", "347", "325")
