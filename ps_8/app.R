@@ -38,7 +38,7 @@ ui <- fluidPage(
                 br(), br(),
                 tableOutput("results"))
     )
-  )
+  ))
   
   server <-
     fucntion(input, output) {
