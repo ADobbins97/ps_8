@@ -18,7 +18,6 @@ library(mapview)
 library(tigris)
 library(lubridate)
 
-census_api_key("a04411e6531c865e7b27d166476949e65577d6cd", install = TRUE)
 
 
 wilmington <- read_csv("http://justicetechlab.org/wp-content/uploads/2018/05/Wilmington_ShotspotterCAD_calls.csv", 
@@ -89,12 +88,6 @@ ui <- fluidPage(
    # Sidebar with a slider input for number of bins 
    sidebarLayout(
       sidebarPanel(
-         selectInput(inputId = x,
-                     label = ,
-                     choices = ,
-                     selected = 
-           
-         )
       ),
       
       # Show a plot of the generated distribution
