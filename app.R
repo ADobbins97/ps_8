@@ -102,22 +102,14 @@ server <- function(input, output) {
   })
 }
 
-ui <- fluidPage(
-  
-  # Application title
-  titlePanel("Shotspotter in Wilmington, NC"),
-  br(),
+ui <- fluidPage(titlePanel("Shotspotter in Wilmington, NC"),
   sidebarLayout(
-  sidebarPanel("inputs"),
-  #mainPanel("results"),
-  checkboxGroupInput("variable", "Unit to Show:", choiceNames = list(icon("323"), icon("291"), icon("328"), icon("347"), icon("325")),
-                     choiceValues = list("323", "291", "328", "347", "325")
+  sidebarPanel(
+  checkboxGroupInput("variable", "Unit to Show:", choices = c("323", "291", "328", "347", "325"))
   ),
-  textOutput("txt"),
-  mainPanel(
-    plotOutput("wilmington_map"),
-    br(),
-    tableOutput("results")
+  mainPanel(plotOutput("wilmington_map"),
+    br(), br(),
+    tableOutput("results"))
   )
 )
 
