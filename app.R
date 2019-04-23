@@ -18,7 +18,7 @@ library(mapview)
 library(tigris)
 library(lubridate)
 
-census_api_key("a04411e6531c865e7b27d166476949e65577d6cd", install = TRUE)
+census_api_key("a04411e6531c865e7b27d166476949e65577d6cd", install = TRUE, overwrite = TRUE)
 
 
 wilmington <- read_csv("http://justicetechlab.org/wp-content/uploads/2018/05/Wilmington_ShotspotterCAD_calls.csv", 
@@ -74,29 +74,8 @@ wilmington <- read_csv("http://justicetechlab.org/wp-content/uploads/2018/05/Wil
 # 
 # wilmington_map
 
-# Define UI for application that draws a histogram
-ui <- fluidPage(
-   
-   # Application title
-   titlePanel("Shotspotter in Wilmington, NC"),
-    br(),
-    sidebarLayout(
-      sidebarPanel("inputs"),
-      mainPanel("results"),
-      checkboxGroupInput("Unit to Show", choices = c("323", "291", "328", "347", "325",
-                                                     selected = c("323", "291", "328", "347", "325",
-                                                                  options = list(`actions-box` = TRUE), 
-                                                                  multiple = TRUE))
-      ), 
-    mainPanel(
-      plotOutput("wilmington_map"),
-      br(), br(),
-      tableOutput("results")
-    )
-  )
-)
-
-server <- function(input, output) {
+# Define UI for application that draws a map
+server <- function(input, output, session) {
   output$wilmington_map <- renderPlot({
     
     wilmington_points <-
@@ -124,6 +103,25 @@ server <- function(input, output) {
       geom_sf(data = points_location, mapping = aes(color = primeunit))
 })
 }
+
+ui <- fluidPage(
+  
+  # Application title
+  #titlePanel("Shotspotter in Wilmington, NC"),
+  #br(),
+  #sidebarLayout(
+    #sidebarPanel("inputs"),
+    #mainPanel("results"),
+    checkboxGroupInput("variable", "Unit to Show:", choiceNames = list(icon("323"), icon("291"), icon("328"), icon("347"), icon("325")),
+                                                   choiceValues = list("323", "291", "328", "347", "325")
+                       ),
+    textOutput("txt"),
+    mainPanel(
+      plotOutput("wilmington_map"),
+      br(),
+      tableOutput("results")
+    )
+  )
 
 #Run the application 
 shinyApp(ui = ui, server = server)
