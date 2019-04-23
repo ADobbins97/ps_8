@@ -59,7 +59,9 @@ blank_sf <-
 
 wilmington_map <- 
   ggplot(data = shapes) +
-  geom_sf(data = shapes)
+  geom_sf(data = shapes) + geom_sf(data = wilmington)
+
+wilmington_map
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
