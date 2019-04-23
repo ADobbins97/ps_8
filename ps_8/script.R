@@ -54,7 +54,7 @@ penis <-
 
 wilmington_map <- 
   ggplot(data = shapes) +
-  geom_sf(data = shapes)
+  geom_sf(data = shapes) + geom_sf(data = wilmington_scatter)
 
 wilmington_map
 
@@ -69,6 +69,12 @@ wilmington_points <-
   #mutate(last_unit_to_leave_the_scene = mdy_hm(last_unit_to_leave_the_scene)) 
   mutate(last_unit_to_leave_the_scene = parse_date_time(last_unit_to_leave_the_scene, "%d %%m %Y %H:%M %S", truncated = 3))
 
-
+wilmington_scatter <-
+  wilmington %>%
+  group_by(primeunit) %>%
+  summarize(total = n()) %>%
+  arrange(desc(total)) %>%
+  slice(1:5) %>%
+  select(primeunit)
 #Comparison of duration of time at scene for 
 
