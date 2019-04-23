@@ -8,6 +8,15 @@
 #
 
 library(shiny)
+library(tidyverse)
+library(janitor)
+library(sf)
+library(tidycensus)
+library(leaflet)
+library(mapview)
+library(tigris)
+library(lubridate)
+
 
 wilmington <- read_csv("http://justicetechlab.org/wp-content/uploads/2018/05/Wilmington_ShotspotterCAD_calls.csv", 
                        col_types = cols(
@@ -32,7 +41,8 @@ wilmington <- read_csv("http://justicetechlab.org/wp-content/uploads/2018/05/Wil
                          Longitude = col_double())) 
 
 wilmington <- clean_names(wilmington) %>%
-  filter(first_unit_there != "NULL", last_unit_to_leave_the_scene != "NULL", latitude != "NA", longitude != "NA")
+  filter(primeunit %in% c("323", "291", "328", "347", "325")) %>%
+  filter(latitude != "NA", longitude != "NA")
 
 shapes <- 
   urban_areas(class = "sf") 
@@ -41,8 +51,6 @@ shapes <-
   shapes %>%
   clean_names() %>%
   filter(name10 == "Wilmington, NC")
-
-st_crs(shapes)
 
 blank_sf <- 
   st_as_sf(wilmington,
@@ -87,7 +95,7 @@ server <- function(input, output) {
       bins <- seq(min(x), max(x), length.out = input$bins + 1)
       
       # draw the histogram with the specified number of bins
-      print(ggplot(wilmington, aes(x=DMA, y=Impressions, fill=DMA)) +geom_histogram())
+      print(ggplot(wilmington_map))
    })
 }
 
